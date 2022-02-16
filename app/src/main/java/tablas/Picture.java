@@ -1,15 +1,16 @@
 package tablas;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Picture {
+public class Picture implements Serializable {
 
     private int id;
     private String name;
     private String description;
-    private Byte[] image;
+    private byte[] image;
 
-    public Picture(int id, String name, String description, Byte[] image) {
+    public Picture(int id, String name, String description, byte[] image) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -42,11 +43,11 @@ public class Picture {
         this.description = description;
     }
 
-    public Byte[] getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(Byte[] image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

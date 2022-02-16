@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
         btnMenuTomarFoto = (Button) findViewById(R.id.btbMenuTomarFoto);
 
+        btnMenuVistaFotos = (Button) findViewById(R.id.btbMenuListaFotos);
+
 
         btnMenuTomarFoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -29,5 +31,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        btnMenuVistaFotos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ActivityMostrar.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 }

@@ -8,15 +8,23 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+
+import configuraciones.SQLiteConexion;
+import configuraciones.Transacciones;
 
 public class ActivityTomarFoto extends AppCompatActivity {
 
@@ -27,6 +35,15 @@ public class ActivityTomarFoto extends AppCompatActivity {
     static final int PETICCION_ACCESO_CAM = 100;
     static final int TAKE_PIC_REQUEST = 101;
 
+    /*
+    *
+    * Variables para poder guardar la imagen
+    * */
+
+    EditText txtNombre;
+    EditText txtDescripcion;
+    Bitmap imagenGlobal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,10 +53,23 @@ public class ActivityTomarFoto extends AppCompatActivity {
         btnGuardarSqlite = (Button) findViewById(R.id.btnGuardarSql);
         btnTomarFotos = (Button) findViewById(R.id.btnTomarFoto);
 
+        txtNombre = (EditText) findViewById(R.id.txtNombre);
+        txtDescripcion = (EditText) findViewById(R.id.txtDescripcion);
+
         btnTomarFotos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 permisos();
+            }
+        });
+
+        btnGuardarSqlite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+//                limpiarEntradas();
+
+                agregarPictureSQL();
             }
         });
     }
@@ -64,6 +94,44 @@ public class ActivityTomarFoto extends AppCompatActivity {
         }
 
 
+    }
+
+    private void agregarPictureSQL(){
+
+        SQLiteConexion conexion = new SQLiteConexion(this, Transacciones.NAME_DATABASE, null, 1);
+        SQLiteDatabase database = conexion.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(Transacciones.PICTURE_NAME, txtNombre.getText().toString());
+        values.put(Transacciones.PICTURE_DESCRIPTION, txtDescripcion.getText().toString());
+
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(20480);
+
+        imagenGlobal.compress(Bitmap.CompressFormat.PNG, 0 , baos);
+
+        byte[] blob = baos.toByteArray();
+
+        values.put(Transacciones.PICTURE_IMAGE, blob);
+
+        Long result = database.insert(Transacciones.TABLE_PICTURE, Transacciones.PICTURE_ID, values);
+
+        Toast.makeText(getApplicationContext(), "Registro exitoso " + result.toString()
+                ,Toast.LENGTH_LONG).show();
+
+        database.close();
+
+        limpiarEntradas();
+    }
+
+    private void limpiarEntradas(){
+        txtNombre.setText("");
+        txtDescripcion.setText("");
+
+        objImagenView.setImageBitmap(null);
+
+        imagenGlobal = null;
     }
 
     // Metodos que son override
@@ -96,6 +164,8 @@ public class ActivityTomarFoto extends AppCompatActivity {
             Bundle bundle = data.getExtras();
 
             Bitmap image = (Bitmap) bundle.get("data");
+
+            imagenGlobal = image;
 
             objImagenView.setImageBitmap(image);
         }
