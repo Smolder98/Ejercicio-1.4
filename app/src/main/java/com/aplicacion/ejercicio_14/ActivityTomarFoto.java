@@ -119,9 +119,9 @@ public class ActivityTomarFoto extends AppCompatActivity {
         values.put(Transacciones.PICTURE_PATH_IMAGE, currentPhotoPath);
 
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(20480);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(10480);
 
-        imagenGlobal.compress(Bitmap.CompressFormat.PNG, 0 , baos);
+        imagenGlobal.compress(Bitmap.CompressFormat.JPEG, 0 , baos);
 
         byte[] blob = baos.toByteArray();
 
@@ -157,7 +157,7 @@ public class ActivityTomarFoto extends AppCompatActivity {
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".jpeg",         /* suffix */
                 storageDir      /* directory */
         );
 
