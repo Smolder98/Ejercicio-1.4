@@ -8,12 +8,14 @@ public class Picture implements Serializable {
     private int id;
     private String name;
     private String description;
+    private String pathImage;
     private byte[] image;
 
-    public Picture(int id, String name, String description, byte[] image) {
+    public Picture(int id, String name, String description, String pathImage, byte[] image) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.pathImage = pathImage;
         this.image = image;
     }
 
@@ -43,21 +45,19 @@ public class Picture implements Serializable {
         this.description = description;
     }
 
+    public String getPathImage() {
+        return pathImage;
+    }
+
+    public void setPathImage(String pathImage) {
+        this.pathImage = pathImage;
+    }
+
     public byte[] getImage() {
         return image;
     }
 
     public void setImage(byte[] image) {
         this.image = image;
-    }
-
-    @Override
-    public String toString() {
-        return "Picture{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", image=" + Arrays.toString(image) +
-                '}';
     }
 }

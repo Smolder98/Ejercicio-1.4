@@ -12,6 +12,7 @@ public class Transacciones {
         public static final String PICTURE_ID = "id";
         public static final String PICTURE_NAME = "name";
         public static final String PICTURE_DESCRIPTION = "description";
+        public static final String PICTURE_PATH_IMAGE = "path";
         public static final String PICTURE_IMAGE = "image";
 
         //Creacion de la tabla
@@ -20,6 +21,7 @@ public class Transacciones {
                 PICTURE_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "+
                 PICTURE_NAME +" TEXT, "+
                 PICTURE_DESCRIPTION +" TEXT, "+
+                PICTURE_PATH_IMAGE +" TEXT, "+
                 PICTURE_IMAGE +" BLOB"+
                 ")";
 

@@ -85,7 +85,8 @@ public class ActivityMostrar extends AppCompatActivity {
             tempPict.setId(cursor.getInt(0));
             tempPict.setName(cursor.getString(1));
             tempPict.setDescription(cursor.getString(2));
-            tempPict.setImage(cursor.getBlob(3));
+            tempPict.setPathImage(cursor.getString(3));
+            tempPict.setImage(cursor.getBlob(4));
 
             arrayListPicture.add(tempPict);
         }

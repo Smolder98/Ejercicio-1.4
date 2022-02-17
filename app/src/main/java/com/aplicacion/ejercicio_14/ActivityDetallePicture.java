@@ -15,7 +15,7 @@ import tablas.Picture;
 
 public class ActivityDetallePicture extends AppCompatActivity {
 
-    ImageView imageViewMostrar;
+    ImageView imageViewMostrar, imageViewMostrarPath;
 
     EditText txtNombre, txtDescripcion;
 
@@ -25,6 +25,7 @@ public class ActivityDetallePicture extends AppCompatActivity {
         setContentView(R.layout.activity_detalle_picture);
 
         imageViewMostrar = (ImageView) findViewById(R.id.imageViewMostrarFoto);
+        imageViewMostrarPath = (ImageView) findViewById(R.id.imageViewMostrarFotoPath);
 
         txtNombre = (EditText) findViewById(R.id.txtMostrarNombre);
         txtDescripcion = (EditText) findViewById(R.id.txtMostrarDescripcion);
@@ -40,7 +41,13 @@ public class ActivityDetallePicture extends AppCompatActivity {
             txtDescripcion.setText(imagen.getDescription());
 
             mostrarImagen(imagen.getImage());
+
+            Bitmap image = BitmapFactory.decodeFile(imagen.getPathImage());
+
+            imageViewMostrarPath.setImageBitmap(image);
         }
+
+
     }
 
     private void mostrarImagen(byte[] image) {

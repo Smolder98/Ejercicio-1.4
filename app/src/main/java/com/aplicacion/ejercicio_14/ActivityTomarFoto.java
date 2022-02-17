@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.content.ContentValues;
@@ -13,8 +14,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +27,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import configuraciones.SQLiteConexion;
 import configuraciones.Transacciones;
@@ -30,7 +39,7 @@ public class ActivityTomarFoto extends AppCompatActivity {
 
     ImageView objImagenView;
     Button btnTomarFotos, btnGuardarSqlite;
-    String correntPhotoPath;
+    String currentPhotoPath;
 
     static final int PETICCION_ACCESO_CAM = 100;
     static final int TAKE_PIC_REQUEST = 101;
@@ -81,7 +90,9 @@ public class ActivityTomarFoto extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PETICCION_ACCESO_CAM);
         }else{
 
-            tomarFoto();
+//            tomarFoto();
+
+            dispatchTakePictureIntent();
         }
     }
 
@@ -105,6 +116,7 @@ public class ActivityTomarFoto extends AppCompatActivity {
 
         values.put(Transacciones.PICTURE_NAME, txtNombre.getText().toString());
         values.put(Transacciones.PICTURE_DESCRIPTION, txtDescripcion.getText().toString());
+        values.put(Transacciones.PICTURE_PATH_IMAGE, currentPhotoPath);
 
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(20480);
@@ -134,6 +146,57 @@ public class ActivityTomarFoto extends AppCompatActivity {
         imagenGlobal = null;
     }
 
+    //Para llenar en el almacenamiento
+    /**********************************************************************************************************************/
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.toString();
+            }
+            // Continue only if the File was successfully created
+            try {
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(this,
+                            "com.aplicacion.ejercicio_14.fileprovider",
+                            photoFile);
+
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+                    startActivityForResult(takePictureIntent, TAKE_PIC_REQUEST);
+                }
+            }catch (Exception e){
+                Log.i("Error", "dispatchTakePictureIntent: " + e.toString());
+            }
+        }
+    }
+
     // Metodos que son override
     /*********************************************************************************************************************************************************/
 
@@ -145,7 +208,8 @@ public class ActivityTomarFoto extends AppCompatActivity {
 
             if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
 
-                tomarFoto();
+//                tomarFoto();
+                dispatchTakePictureIntent();
             }
         }else{
 
@@ -157,17 +221,21 @@ public class ActivityTomarFoto extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == TAKE_PIC_REQUEST && resultCode == RESULT_OK){
 
-            Bundle bundle = data.getExtras();
+//            Bundle bundle = data.getExtras();
 
-            Bitmap image = (Bitmap) bundle.get("data");
+            Bitmap image = BitmapFactory.decodeFile(currentPhotoPath);
 
             imagenGlobal = image;
 
             objImagenView.setImageBitmap(image);
+
+            Toast.makeText(getApplicationContext(), "Registro de imagen exitoso en almacenamiento "
+                    ,Toast.LENGTH_LONG).show();
         }
     }
 }
