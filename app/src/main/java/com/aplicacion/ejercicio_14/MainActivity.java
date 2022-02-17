@@ -9,8 +9,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     
-    Button btnMenuTomarFoto;
-    Button btnMenuVistaFotos;
+    Button btnMenuTomarFoto, btnMenuVistaFotos, btnMenuVistaTodasFotos;
     
     
     @Override
@@ -22,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
         btnMenuTomarFoto = (Button) findViewById(R.id.btbMenuTomarFoto);
 
         btnMenuVistaFotos = (Button) findViewById(R.id.btbMenuListaFotos);
+
+        btnMenuVistaTodasFotos = (Button) findViewById(R.id.btbMenuListaTodasFoto);
 
 
         btnMenuTomarFoto.setOnClickListener(new View.OnClickListener() {
@@ -39,6 +40,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        btnMenuVistaTodasFotos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ActivityFotosAlmacenamiento.class);
+                startActivity(intent);
+            }
+        });
+
 
 
     }

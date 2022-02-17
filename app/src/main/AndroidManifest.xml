@@ -40,6 +40,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ejercicio14">
         <activity
+            android:name=".ActivityFotosAlmacenamiento"
+            android:exported="false" />
+        <activity
             android:name=".ActivityDetallePicture"
             android:exported="false" />
         <activity
