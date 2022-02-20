@@ -46,6 +46,7 @@ public class Adaptador extends BaseAdapter {
         Picture item = (Picture) getItem(i);
 
         view = LayoutInflater.from(context).inflate(R.layout.item, null);
+        
 
         ImageView imageView = view.findViewById(R.id.itemFoto);
         TextView editText = view.findViewById(R.id.itemTitulo);

@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -119,13 +120,16 @@ public class ActivityTomarFoto extends AppCompatActivity {
         values.put(Transacciones.PICTURE_PATH_IMAGE, currentPhotoPath);
 
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(10480);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(20480);
 
         imagenGlobal.compress(Bitmap.CompressFormat.JPEG, 0 , baos);
 
         byte[] blob = baos.toByteArray();
 
         values.put(Transacciones.PICTURE_IMAGE, blob);
+
+
+
 
         Long result = database.insert(Transacciones.TABLE_PICTURE, Transacciones.PICTURE_ID, values);
 
