@@ -115,8 +115,8 @@ public class ActivityTomarFoto extends AppCompatActivity {
         String nombre = txtNombre.getText().toString();
         String descripcion = txtDescripcion.getText().toString();
 
-        if (nombre.isEmpty() || descripcion.isEmpty() || currentPhotoPath == null) {
-            Toast.makeText(this, "Debe llenar todos los campos para poder guardar.", Toast.LENGTH_LONG).show();
+        if (nombre.isEmpty() || descripcion.isEmpty() || currentPhotoPath == null || currentPhotoPath == "") {
+            Toast.makeText(this, "Debe tomar la foto y llenar todos los campos para poder guardar.", Toast.LENGTH_LONG).show();
         } else {
             values.put(Transacciones.PICTURE_NAME, nombre);
             values.put(Transacciones.PICTURE_DESCRIPTION, descripcion);
@@ -144,6 +144,7 @@ public class ActivityTomarFoto extends AppCompatActivity {
         objImagenView.setImageBitmap(null);
 
         imagenGlobal = null;
+        currentPhotoPath="";
     }
 
     //Para llenar en el almacenamiento
