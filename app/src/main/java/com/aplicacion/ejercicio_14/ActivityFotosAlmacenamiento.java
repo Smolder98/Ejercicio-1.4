@@ -32,8 +32,6 @@ public class ActivityFotosAlmacenamiento extends AppCompatActivity {
         setContentView(R.layout.activity_fotos_almacenamiento);
 
         arrayList = new ArrayList<Picture>();
-
-
         pic = null;
 
         listaImg = new ArrayList<String>();
@@ -45,9 +43,7 @@ public class ActivityFotosAlmacenamiento extends AppCompatActivity {
            pic = new Picture();
 
            pic.setPathImage(f.getPath());
-
            pic.setName(f.getName());
-
            arrayList.add(pic);
 
         }
@@ -56,11 +52,7 @@ public class ActivityFotosAlmacenamiento extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.listViewItem);
 
-
         listView.setAdapter(adaptador);
-
-
-
 
     }
 }

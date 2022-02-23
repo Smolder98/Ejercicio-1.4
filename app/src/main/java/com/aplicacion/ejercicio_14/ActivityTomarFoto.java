@@ -87,7 +87,6 @@ public class ActivityTomarFoto extends AppCompatActivity {
 
     private void permisos(){
         if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PETICCION_ACCESO_CAM);
         }else{
 
@@ -101,10 +100,8 @@ public class ActivityTomarFoto extends AppCompatActivity {
         Intent takePhoto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if(takePhoto.resolveActivity(getPackageManager()) != null){
-
             startActivityForResult(takePhoto, TAKE_PIC_REQUEST);
         }
-
 
     }
 
@@ -115,30 +112,29 @@ public class ActivityTomarFoto extends AppCompatActivity {
 
         ContentValues values = new ContentValues();
 
-        values.put(Transacciones.PICTURE_NAME, txtNombre.getText().toString());
-        values.put(Transacciones.PICTURE_DESCRIPTION, txtDescripcion.getText().toString());
-        values.put(Transacciones.PICTURE_PATH_IMAGE, currentPhotoPath);
+        String nombre = txtNombre.getText().toString();
+        String descripcion = txtDescripcion.getText().toString();
 
+        if (nombre.isEmpty() || descripcion.isEmpty() || currentPhotoPath == null) {
+            Toast.makeText(this, "Debe llenar todos los campos para poder guardar.", Toast.LENGTH_LONG).show();
+        } else {
+            values.put(Transacciones.PICTURE_NAME, nombre);
+            values.put(Transacciones.PICTURE_DESCRIPTION, descripcion);
+            values.put(Transacciones.PICTURE_PATH_IMAGE, currentPhotoPath);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(20480);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(20480);
+            imagenGlobal.compress(Bitmap.CompressFormat.JPEG, 0 , baos);
 
-        imagenGlobal.compress(Bitmap.CompressFormat.JPEG, 0 , baos);
+            byte[] blob = baos.toByteArray();
+            values.put(Transacciones.PICTURE_IMAGE, blob);
 
-        byte[] blob = baos.toByteArray();
+            Long result = database.insert(Transacciones.TABLE_PICTURE, Transacciones.PICTURE_ID, values);
+            Toast.makeText(getApplicationContext(), "Registro exitoso " + result.toString(), Toast.LENGTH_LONG).show();
 
-        values.put(Transacciones.PICTURE_IMAGE, blob);
+            database.close();
+            limpiarEntradas();
+        }
 
-
-
-
-        Long result = database.insert(Transacciones.TABLE_PICTURE, Transacciones.PICTURE_ID, values);
-
-        Toast.makeText(getApplicationContext(), "Registro exitoso " + result.toString()
-                ,Toast.LENGTH_LONG).show();
-
-        database.close();
-
-        limpiarEntradas();
     }
 
     private void limpiarEntradas(){
